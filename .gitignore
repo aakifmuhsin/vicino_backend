@@ -1,0 +1,24 @@
+# Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# Virtual environment
+newenv/
+.env/
+
+# IDE or editor files
+.idea/
+.vscode/
+
+# macOS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+
+# Log files
+*.log
+
+# SQLite database (if using SQLite)
+*.sqlite3
