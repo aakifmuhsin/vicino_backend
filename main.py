@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from enum import Enum
 import uuid
 import random
+import time
 
 app = FastAPI()
 app.add_middleware(
@@ -43,15 +44,15 @@ items_db = [
 orders_db = {}            # {order_id: Order}.
 blockchain_ledger = []    # List of transaction records
 otp_db ={}                # {phone: otp}
+user_db = {}  # {user_id: user_info}
 class LoginRequest(BaseModel):
     phone: str
     role: str
-    admin_value: Optional[str] = None  # Required if role is "admin"
+    location: Optional[str] = None  # Required if role is "admin"
 
 # Model for OTP verification
 class OtpVerificationRequest(BaseModel):
     phone: str
-    role: str
     otp: str
 
 class StoreItem(BaseModel):
@@ -120,6 +121,9 @@ class TransactionRecord(BaseModel):
 
 # ------------------ Helper Functions ------------------
 
+def generate_unique_id(role: str) -> str:
+    """Generate a unique user ID based on role."""
+    return str(uuid.uuid4())
 
 def calculate_order_total(items: List[Item]) -> float:
     """Calculate total order amount based on items, quantity, and unit price."""
@@ -164,43 +168,43 @@ def record_blockchain_transaction(record: TransactionRecord):
 # ------------------ API Endpoints ------------------
 @app.post("/login/send_otp")
 def send_otp(login_request: LoginRequest):
-    # For admin role, ensure the additional field is correct
-    if login_request.role == "admin":
-        if login_request.admin_value != "adminotp":
-            raise HTTPException(status_code=400, detail="Invalid admin credentials")
+    user = next((user for user in user_db.values() if user["phone"] == login_request.phone), None)
     
-    # For demonstration, we always send the same OTP ("1234")
-    otp = "1234"
-    otp_db[login_request.phone] = otp
+    if user:
+        user_id = list(user_db.keys())[0]  # Use existing user_id
+    else:
+        user_id = generate_unique_id(login_request.role)
+        user_db[user_id] = {
+            "phone": login_request.phone,
+            "role": login_request.role,
+            "location": login_request.location  # Store the location (if provided)
+        }
     
-    # In production, you would integrate with an SMS service to send the OTP.
-    return {
-        "message": f"OTP sent to {login_request.phone}",
-        "otp": otp  # Remove OTP from the response in a real app!
-    }
+    otp = str(random.randint(1000, 9999))
+    otp_db[login_request.phone] = {"otp": otp, "timestamp": time.time()}  # Store OTP with timestamp
+    
+    return {"message": f"OTP sent to {login_request.phone}", "user_id": user_id, "otp": otp}
 
 @app.post("/login/verify_otp")
 def verify_otp(otp_request: OtpVerificationRequest):
-    # Check if the OTP was previously sent for this phone number
     if otp_request.phone not in otp_db:
         raise HTTPException(status_code=404, detail="OTP not found for the provided phone number")
     
     stored_otp = otp_db[otp_request.phone]
-    if otp_request.otp != stored_otp:
+        # Proceed with OTP verification
+    if otp_request.otp != stored_otp["otp"]:
         raise HTTPException(status_code=400, detail="Invalid OTP")
     
     # Remove the OTP after successful verification to simulate one-time use
     del otp_db[otp_request.phone]
     
-    # Return a role-based success response
-    if otp_request.role == "admin":
-        return {"message": "Admin login successful", "role": "admin"}
-    elif otp_request.role == "customer":
-        return {"message": "Customer login successful", "role": "customer"}
-    elif otp_request.role == "deliveryPartner":
-        return {"message": "Delivery Partner login successful", "role": "deliveryPartner"}
+    # Fetch user_id based on phone number
+    user = next((user for user in user_db.values() if user["phone"] == otp_request.phone), None)
+    if user:
+        return {"message": f"{user['role']} login successful", "role": user["role"], "user_id": list(user_db.keys())[0]}
     else:
-        raise HTTPException(status_code=400, detail="Invalid role provided")
+        raise HTTPException(status_code=404, detail="User not found")
+
 @app.get("/items/nearby", response_model=List[StoreItem])
 def get_nearby_items():
     return items_db
@@ -213,6 +217,8 @@ def create_order(order_data: OrderCreate):
     """
     order_id = str(uuid.uuid4())
     total = calculate_order_total(order_data.items)
+    if order_data.customer_id not in user_db:
+        raise HTTPException(status_code=404, detail="User not found")
     order = Order(
         id=order_id,
         customer_id=order_data.customer_id,
