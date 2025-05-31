@@ -6,7 +6,7 @@ Simple test to check if the Apps Script is accessible
 import requests
 import json
 
-APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgPaUfr8RuOQwcGmLEG53WTmc6BDSPwJjBCg5mYwuWUqaPnkTqNc9L8Hb4rtYVl7V_/exec"
+APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8ccNA3R_9vfq6KvyuAHvsNb7FpoAV0nJi_pJuYHhZqNEBeedHfMTC5iLxvNdEQvm1/exec"
 
 
 def test_basic_access():

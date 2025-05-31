@@ -9,7 +9,7 @@ import json
 
 # Configuration
 FASTAPI_BASE_URL = "http://127.0.0.1:8000"
-APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJiaNe-MaSm3vXlDKb6PvHUyq5IxXIfkguKQMkfMr7Y5f9PMyhTOLPoq4IfUA8LHeK/exec"
+APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8ccNA3R_9vfq6KvyuAHvsNb7FpoAV0nJi_pJuYHhZqNEBeedHfMTC5iLxvNdEQvm1/exec"
 
 
 async def test_fastapi_server():
