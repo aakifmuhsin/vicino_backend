@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "main.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "maxDuration": 30
+      }
     }
   ],
   "routes": [
@@ -13,11 +16,6 @@
     }
   ],
   "env": {
-    "APP_SCRIPT_URL": "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"
-  },
-  "functions": {
-    "main.py": {
-      "maxDuration": 30
-    }
+    "APP_SCRIPT_URL": "https://script.google.com/macros/s/AKfycbwikUs0b1c0fXLUbZG4P8wOEHl_1Zqm3bstp8CKf0S01wVRyZYLEj-bY3djeEibxNBl/exec"
   }
 }
