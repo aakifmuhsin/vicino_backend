@@ -79,7 +79,7 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
-APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-erOFFAjAe--skS2qQZFbgyI0CBM3jJTA64SCSMKZnazG0dx9wj6R0f_itWi83gey/exec"
+APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJiaNe-MaSm3vXlDKb6PvHUyq5IxXIfkguKQMkfMr7Y5f9PMyhTOLPoq4IfUA8LHeK/exec"
 items_db = [
     {
         "id": "1",
