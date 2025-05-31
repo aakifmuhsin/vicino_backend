@@ -79,7 +79,7 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
-APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJiaNe-MaSm3vXlDKb6PvHUyq5IxXIfkguKQMkfMr7Y5f9PMyhTOLPoq4IfUA8LHeK/exec"
+APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8ccNA3R_9vfq6KvyuAHvsNb7FpoAV0nJi_pJuYHhZqNEBeedHfMTC5iLxvNdEQvm1/exec"
 items_db = [
     {
         "id": "1",
@@ -284,10 +284,10 @@ async def send_otp(login_request: LoginRequest):
 @app.post("/login/verify_otp")
 async def verify_otp(otp_request: OtpVerificationRequest):
     try:
-        otp_request_otp = int(otp_request.otp)
+        # Keep OTP as string - don't convert to int
         response = await make_appscript_request("verify_otp", {
             "phone": otp_request.phone,
-            "otp": otp_request_otp
+            "otp": otp_request.otp  # Send as string, not int
         })
 
         if not response.get("success"):
