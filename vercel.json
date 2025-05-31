@@ -11,5 +11,13 @@
       "src": "/(.*)",
       "dest": "main.py"
     }
-  ]
+  ],
+  "env": {
+    "APP_SCRIPT_URL": "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"
+  },
+  "functions": {
+    "main.py": {
+      "maxDuration": 30
+    }
+  }
 }

@@ -22,3 +22,4 @@ Thumbs.db
 
 # SQLite database (if using SQLite)
 *.sqlite3
+.qodo
