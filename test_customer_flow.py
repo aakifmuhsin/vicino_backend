@@ -3,7 +3,7 @@ import httpx
 import time
 
 # Base URL for Google Apps Script API
-APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxL6I3qU1g2dSgQP7AsVww-Ig5ouE_u7yCMn1ta-stuCZdnL8K1cDnFnUtzFoPR6QcC/exec"
+APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-erOFFAjAe--skS2qQZFbgyI0CBM3jJTA64SCSMKZnazG0dx9wj6R0f_itWi83gey/exec"
 
 # Function to send POST requests to Google Apps Script API
 async def make_appscript_request(endpoint: str, payload: dict):
